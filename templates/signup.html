@@ -1,0 +1,72 @@
+{% extends 'base.html' %} {% block title %} sign up{% endblock title %} {% block body %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    /* CSS styles for the chatbot interface */
+    .chatbox {
+      width: 300px;
+      height: 400px;
+      border: 1px solid #ccc;
+      overflow-y: scroll;
+    }
+  </style>
+  <script>
+    // JavaScript code for sending/receiving messages
+    $(document).ready(function() {
+      // Submit the form when user presses Enter key
+      $("#usermsg").keypress(function(e) {
+        if (e.which === 13) {
+          e.preventDefault();
+          $("#chatform").submit();
+        }
+      });
+
+      // Handle form submission
+      $("#chatform").submit(function(e) {
+        e.preventDefault();
+        var message = $("#usermsg").val();
+        if (message !== "") {
+          var chatbox = $("#chatbox");
+          chatbox.append("<div class='usermsg'><strong>You:</strong> " + message + "</div>");
+          chatbox.scrollTop(chatbox[0].scrollHeight);
+
+          // Send message to the server
+          $.ajax({
+            url: "/get_response",
+            type: "POST",
+            data: { usermsg: message },
+            success: function(response) {
+              chatbox.append("<div class='botmsg'><strong>ChatBot:</strong> " + response + "</div>");
+              chatbox.scrollTop(chatbox[0].scrollHeight);
+              $("#usermsg").val("");
+            }
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Web Page Chatbot</h1>
+
+  <div id="chatbox" class="chatbox"></div>
+
+  <form id="chatform" action="/get_response" method="post">
+    <input type="text" id="usermsg" placeholder="Type your message" />
+    <input type="submit" value="Send" />
+  </form>
+</body>
+
+</html>
+
+{% endblock body %}
