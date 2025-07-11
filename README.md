@@ -1,0 +1,1 @@
+I made a deseased plant leaf detector. For that first I created a model for identify leaf. Then I trained it using mango guava and lemon leafs. Now if I give any deseased leaf it identify what it is. 
